@@ -1,7 +1,6 @@
 #!/bin/bash
 echo "🔧 Generando environment.prod.ts para Vercel..."
 
-# Crear el archivo environment.prod.ts con las variables de entorno
 cat > src/environments/environment.prod.ts << EOF
 export const environment = {
   production: true,
@@ -17,8 +16,4 @@ export const environment = {
 EOF
 
 echo "✅ Archivo environment.prod.ts generado"
-echo "📦 Contenido:"
-cat src/environments/environment.prod.ts
-
-echo "🏗️ Ejecutando build de Angular..."
 ng build --configuration=production
