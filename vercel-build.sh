@@ -16,4 +16,8 @@ export const environment = {
 EOF
 
 echo "✅ Archivo environment.prod.ts generado"
+echo "📦 Contenido:"
+cat src/environments/environment.prod.ts
+
+echo "🏗️ Ejecutando build..."
 ng build --configuration=production
