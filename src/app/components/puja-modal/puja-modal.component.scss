@@ -1,0 +1,129 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+
+  h2 {
+    margin: 0;
+    color: #f59e0b;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+  }
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.producto-info {
+  background: #f8f8f5;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+
+  .btn-cancelar {
+    flex: 1;
+    padding: 12px;
+    background: #f5f5f0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .btn-enviar {
+    flex: 1;
+    padding: 12px;
+    background: #f59e0b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+}
+
+.error-message {
+  background: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.success-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.nota {
+  font-size: 0.7rem;
+  color: #999;
+  text-align: center;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

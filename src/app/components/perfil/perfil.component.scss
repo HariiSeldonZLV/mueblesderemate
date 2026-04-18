@@ -1,0 +1,79 @@
+.perfil-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 80vh;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.perfil-header h1 {
+  text-align: center;
+  color: #f59e0b;
+  margin-bottom: 40px;
+}
+
+.user-info {
+  display: flex;
+  gap: 30px;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.user-info .avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info .info h2 {
+  margin: 0 0 5px;
+}
+
+.pujas-section h2 {
+  margin-bottom: 20px;
+}
+
+.pujas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.puja-card {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.puja-producto h3 {
+  margin: 0 0 5px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.puja-producto .status {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: #fff3e0;
+  color: #f59e0b;
+}
+
+.puja-detalle {
+  text-align: right;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.loading, .empty {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 16px;
+}

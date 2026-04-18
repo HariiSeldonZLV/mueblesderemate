@@ -1,0 +1,66 @@
+<div class="productos-container">
+  <div class="header">
+    <h1>🛍️ Todos los Productos</h1>
+    <p>Encuentra muebles y electrodomésticos de ocasión</p>
+  </div>
+
+  <div class="filtros">
+    @for (cat of categories; track cat.value) {
+      <button
+        class="filtro-btn"
+        [class.active]="selectedCategory === cat.value"
+        (click)="selectedCategory = cat.value; applyFilter()">
+        {{ cat.label }}
+      </button>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+  }
+
+  @if (!loading) {
+    <div class="productos-grid">
+      @for (product of filteredProducts; track product.id) {
+        <div class="producto-card">
+          <div class="producto-imagen">
+            <img [src]="product.images[0] || 'https://picsum.photos/id/122/300/220'" [alt]="product.name">
+            @if (product.featured) {
+              <span class="destacado">⭐ Destacado</span>
+            }
+          </div>
+          <div class="producto-info">
+            <h3>{{ product.name }}</h3>
+            <p class="descripcion">{{ product.description }}</p>
+            <div class="precio">
+              <span class="precio-fijo">${{ product.price | number }}</span>
+              <span class="precio-oferta">Oferta mínima</span>
+            </div>
+            <div class="stock" [class.bajo]="product.stock < 10">
+              📦 {{ product.stock }} disponibles
+            </div>
+            <button class="btn-ofertar" (click)="ofertar(product)">
+              📝 Hz tu oferta
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!loading && filteredProducts.length === 0) {
+    <div class="empty">
+      <p>No hay productos en esta categoría</p>
+    </div>
+  }
+</div>
+<!-- Modal de puja -->
+<app-puja-modal
+  *ngIf="mostrarModal"
+  [producto]="productoSeleccionado"
+  (close)="cerrarModal()"
+  (bidSubmitted)="onBidSubmitted($event)">
+</app-puja-modal>

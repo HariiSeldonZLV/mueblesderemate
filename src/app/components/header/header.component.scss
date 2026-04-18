@@ -1,0 +1,72 @@
+$cream: #f5f0e8;
+$chocolate-dark: #5C4033;
+$mustard: #D4A017;
+$gold: #C5A059;
+$bone: #FFF8F0;
+
+.header {
+  background: $bone;
+  border-bottom: 3px solid $gold;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  .logo a {
+    font-family: 'Righteous', cursive;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $chocolate-dark;
+    text-decoration: none;
+    letter-spacing: 2px;
+
+    &:hover {
+      color: $mustard;
+    }
+  }
+
+  .nav {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    a {
+      font-family: 'oswald', sans-serif;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: $chocolate-dark;
+      text-decoration: none;
+      transition: color 0.3s;
+
+      &:hover, &.active {
+        color: $mustard;
+      }
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid $mustard;
+      color: $mustard;
+      padding: 6px 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: $mustard;
+        color: $bone;
+      }
+    }
+  }
+}

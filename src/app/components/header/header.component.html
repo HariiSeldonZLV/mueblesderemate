@@ -1,0 +1,21 @@
+<header class="header">
+  <div class="logo">
+    <a routerLink="/">🏠 Muebles de Ocasión Molina</a>
+  </div>
+
+  <nav class="nav">
+    <a routerLink="/" routerLinkActive="active">Inicio</a>
+    <a routerLink="/productos" routerLinkActive="active">Productos</a>
+
+    @if (isAuthenticated()) {
+      <!-- Mostrar admin si el email es el correcto -->
+      @if (currentUser()?.email === 'admin@rematezone.cl') {
+        <a routerLink="/admin" routerLinkActive="active">🛠️ Admin</a>
+      }
+      <a routerLink="/perfil" routerLinkActive="active">📋 Mis Subastas</a>
+      <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">Ingresar / Registrarse</a>
+    }
+  </nav>
+</header>

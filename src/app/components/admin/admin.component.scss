@@ -1,0 +1,246 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 80vh;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h1 {
+    color: #f59e0b;
+    font-size: 1rem;
+  }
+}
+
+.admin-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+
+  button {
+    padding: 10px 24px;
+    background: white;
+    border: 2px solid #f59e0b;
+    color: #f59e0b;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+
+    &:hover, &.active {
+      background: #f59e0b;
+      color: white;
+    }
+  }
+}
+
+.admin-panel {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.btn-create {
+  background: #f59e0b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.product-form {
+  background: #f8f8f5;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+
+  h3 {
+    margin-bottom: 15px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+
+  .form-control {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  textarea.form-control {
+    grid-column: span 2;
+  }
+
+  .checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-save, .btn-cancel {
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.btn-save {
+  background: #4caf50;
+  color: white;
+  border: none;
+}
+
+.btn-cancel {
+  background: #ccc;
+  border: none;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.product-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+
+  .product-image img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .product-info {
+    flex: 1;
+
+    h4 {
+      margin: 0 0 5px;
+    }
+
+    p {
+      margin: 0;
+      color: #f59e0b;
+      font-weight: bold;
+    }
+
+    .stock {
+      color: #666;
+      font-size: 0.7rem;
+    }
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.bids-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bid-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  &.accepted {
+    background: #e8f5e9;
+    border-color: #4caf50;
+  }
+
+  &.rejected {
+    background: #ffebee;
+    border-color: #f44336;
+  }
+
+  .bid-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+
+      &.pending {
+        background: #fff3e0;
+        color: #f59e0b;
+      }
+      &.accepted {
+        background: #4caf50;
+        color: white;
+      }
+      &.rejected {
+        background: #f44336;
+        color: white;
+      }
+    }
+  }
+
+  .bid-actions {
+    display: flex;
+    gap: 8px;
+
+    .btn-accept, .btn-reject {
+      padding: 6px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .btn-accept {
+      background: #4caf50;
+      color: white;
+    }
+
+    .btn-reject {
+      background: #f44336;
+      color: white;
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<div class="perfil-container">
+  <div class="perfil-header">
+    <h1>👤 Mi Perfil</h1>
+  </div>
+
+  <div class="user-info">
+    <div class="avatar">
+      <img [src]="user?.photoURL || 'https://via.placeholder.com/100?text=User'" [alt]="user?.displayName">
+    </div>
+    <div class="info">
+      <h2>{{ user?.displayName || 'Usuario' }}</h2>
+      <p>{{ user?.email }}</p>
+    </div>
+  </div>
+
+  <div class="pujas-section">
+    <h2>📝 Mis Pujas</h2>
+
+    @if (loading) {
+      <div class="loading">Cargando tus pujas...</div>
+    } @else if (pujas.length === 0) {
+      <div class="empty">
+        <p>No has realizado ninguna puja aún.</p>
+        <a routerLink="/" class="btn-link">Explorar productos →</a>
+      </div>
+    } @else {
+      <div class="pujas-grid">
+        <div *ngFor="let puja of pujas" class="puja-card">
+          <div class="puja-producto">
+            <h3>{{ puja.productName }}</h3>
+            <span class="status">{{ puja.status === 'pending' ? 'Pendiente' : puja.status === 'accepted' ? 'Aceptada' : 'Rechazada' }}</span>
+          </div>
+          <div class="puja-detalle">
+            <div class="monto">💰 ${{ puja.amount | number }}</div>
+            <div class="fecha">📅 {{ puja.createdAt | date:'dd/MM/yyyy' }}</div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

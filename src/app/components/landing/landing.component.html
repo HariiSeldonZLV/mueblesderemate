@@ -1,0 +1,114 @@
+<div class="landing">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Encuentra Tu Estilo, <span class="highlight">de Ocasión</span></h1>
+      <p class="hero-subtitle">Muebles y Electrodomésticos de Remate</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" routerLink="/productos">Ver Productos</button>
+        <button class="btn-secondary" routerLink="/subastas">Ver Subastas Activas</button>
+      </div>
+      <div class="hero-location">
+        <span class="location-icon">📍</span>
+        <span>Muebles de Ocasión - Molina</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra de usuario -->
+  <div class="user-bar" *ngIf="authService.isAuthenticated()">
+    <span>👤 {{ authService.getCurrentUser()?.displayName || authService.getCurrentUser()?.email }}</span>
+    <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+  </div>
+
+  <!-- Categorías Destacadas -->
+  <section class="categorias">
+    <div class="container">
+      <h2 class="section-title">Categorías Destacadas</h2>
+      <div class="categorias-grid">
+        <div class="categoria-card" (click)="irACategoria('muebles')">
+          <div class="categoria-icon">🛋️</div>
+          <h3>Muebles</h3>
+          <p>Sillones, mesas, armarios y más</p>
+          <span class="categoria-link">Ver más →</span>
+        </div>
+        <div class="categoria-card" (click)="irACategoria('electrodomesticos')">
+          <div class="categoria-icon">📺</div>
+          <h3>Electrodomésticos</h3>
+          <p>Refrigeradores, lavadoras, TVs</p>
+          <span class="categoria-link">Ver más →</span>
+        </div>
+        <div class="categoria-card" (click)="irACategoria('destacados')">
+          <div class="categoria-icon">⭐</div>
+          <h3>Destacados</h3>
+          <p>Las mejores ofertas del mes</p>
+          <span class="categoria-link">Ver más →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Productos Recientes -->
+  <section class="productos-recientes">
+    <div class="container">
+      <h2 class="section-title">Productos Recientes</h2>
+
+      @if (loading) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Cargando productos...</p>
+        </div>
+      }
+
+      @if (!loading) {
+        <div class="productos-grid">
+          @for (producto of productosRecientes; track producto.id) {
+            <div class="producto-card">
+              <div class="producto-imagen">
+                <img [src]="producto.images[0] || 'https://picsum.photos/id/122/300/220'" [alt]="producto.name">
+                @if (producto.featured) {
+                  <span class="producto-categoria">⭐ Destacado</span>
+                }
+              </div>
+              <div class="producto-info">
+                <h3>{{ producto.name }}</h3>
+                <p class="producto-descripcion">{{ producto.description }}</p>
+                <div class="producto-precio">
+                  <span class="precio-fijo">${{ producto.price | number }}</span>
+                  <span class="precio-oferta">Oferta mínima</span>
+                </div>
+                <button class="btn-ofertar" (click)="ofertar(producto)">
+                  📝 Hz tu oferta
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      @if (loading) {
+  <div class="loading-skeleton">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3,4]">
+      <div class="skeleton-image"></div>
+      <div class="skeleton-text"></div>
+    </div>
+  </div>
+}
+
+      <div class="ver-todos">
+        <button class="btn-ver-todos" routerLink="/productos">Ver todos los productos →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal de puja -->
+  <app-puja-modal
+    *ngIf="mostrarModal"
+    [producto]="productoSeleccionado"
+    (close)="cerrarModal()"
+    (bidSubmitted)="onBidSubmitted($event)">
+  </app-puja-modal>
+</div>
+
+

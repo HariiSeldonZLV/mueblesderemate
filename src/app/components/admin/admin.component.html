@@ -1,0 +1,98 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>🛠️ Panel de Administración</h1>
+    <p>Gestiona productos y pujas del sistema</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="admin-tabs">
+    <button [class.active]="activeTab === 'products'" (click)="activeTab = 'products'">
+      📦 Productos ({{ products.length }})
+    </button>
+    <button [class.active]="activeTab === 'bids'" (click)="activeTab = 'bids'">
+      📝 Pujas ({{ bids.length }})
+    </button>
+  </div>
+
+  <!-- Panel de Productos -->
+  @if (activeTab === 'products') {
+    <div class="admin-panel">
+      <div class="panel-header">
+        <button class="btn-create" (click)="openCreateProduct()">+ Nuevo Producto</button>
+      </div>
+
+      <!-- Formulario de producto -->
+      @if (showProductForm) {
+        <div class="product-form">
+          <h3>{{ editingProduct ? 'Editar Producto' : 'Nuevo Producto' }}</h3>
+          <div class="form-grid">
+            <input [(ngModel)]="productForm.name" placeholder="Nombre" class="form-control">
+            <textarea [(ngModel)]="productForm.description" placeholder="Descripción" class="form-control"></textarea>
+            <input type="number" [(ngModel)]="productForm.price" placeholder="Precio" class="form-control">
+            <select [(ngModel)]="productForm.category" class="form-control">
+              <option value="muebles">Muebles</option>
+              <option value="electrodomesticos">Electrodomésticos</option>
+            </select>
+            <input type="number" [(ngModel)]="productForm.stock" placeholder="Stock" class="form-control">
+            <input [(ngModel)]="productForm.image" placeholder="URL de imagen" class="form-control">
+            <label class="checkbox">
+              <input type="checkbox" [(ngModel)]="productForm.featured"> Destacado
+            </label>
+          </div>
+          <div class="form-actions">
+            <button class="btn-save" (click)="saveProduct()">Guardar</button>
+            <button class="btn-cancel" (click)="showProductForm = false">Cancelar</button>
+          </div>
+        </div>
+      }
+
+      <!-- Lista de productos -->
+      <div class="products-grid">
+        @for (product of products; track product.id) {
+          <div class="product-card">
+            <div class="product-image">
+              <img [src]="product.images?.[0] || 'https://picsum.photos/100/100'" [alt]="product.name">
+            </div>
+            <div class="product-info">
+              <h4>{{ product.name }}</h4>
+              <p>${{ product.price | number }}</p>
+              <p class="stock">Stock: {{ product.stock }}</p>
+            </div>
+            <div class="product-actions">
+              <button class="btn-edit" (click)="editProduct(product)">✏️</button>
+              <button class="btn-delete" (click)="deleteProduct(product.id)">🗑️</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Panel de Pujas -->
+  @if (activeTab === 'bids') {
+    <div class="admin-panel">
+      <div class="bids-list">
+        @for (bid of bids; track bid.id) {
+          <div class="bid-card" [class.accepted]="bid.status === 'accepted'" [class.rejected]="bid.status === 'rejected'">
+            <div class="bid-info">
+              <strong>{{ bid.productName }}</strong>
+              <span>💰 ${{ bid.amount | number }}</span>
+              <span>👤 {{ bid.userName }}</span>
+              <span>📧 {{ bid.userEmail }}</span>
+              <span>📅 {{ bid.createdAt?.toDate?.() | date:'dd/MM/yyyy HH:mm' }}</span>
+              <span class="status-badge" [class]="bid.status">
+                {{ bid.status === 'pending' ? 'Pendiente' : bid.status === 'accepted' ? 'Aceptada' : 'Rechazada' }}
+              </span>
+            </div>
+            @if (bid.status === 'pending') {
+              <div class="bid-actions">
+                <button class="btn-accept" (click)="updateBidStatus(bid.id, 'accepted')">✓ Aceptar</button>
+                <button class="btn-reject" (click)="updateBidStatus(bid.id, 'rejected')">✗ Rechazar</button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

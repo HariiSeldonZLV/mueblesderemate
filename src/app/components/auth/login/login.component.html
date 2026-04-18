@@ -1,0 +1,42 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>{{ isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta' }}</h2>
+
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div *ngIf="!isLoginMode" class="form-group">
+        <input type="text" [(ngModel)]="displayName" name="displayName" placeholder="Nombre completo" required>
+      </div>
+
+      <div class="form-group">
+        <input type="email" [(ngModel)]="email" name="email" placeholder="Correo electrónico" required>
+      </div>
+
+      <div class="form-group">
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+        {{ loading ? 'Cargando...' : (isLoginMode ? 'Iniciar Sesión' : 'Registrarse') }}
+      </button>
+    </form>
+
+    <div class="divider">o</div>
+
+    <button class="btn-google" (click)="loginWithGoogle()" [disabled]="loading">
+      🔑 Continuar con Google
+    </button>
+
+    <button class="btn-facebook" (click)="loginWithFacebook()" [disabled]="loading">
+      📘 Continuar con Facebook
+    </button>
+
+    <p class="toggle">
+      {{ isLoginMode ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+      <button type="button" (click)="toggleMode()">
+        {{ isLoginMode ? 'Regístrate' : 'Inicia Sesión' }}
+      </button>
+    </p>
+  </div>
+</div>
