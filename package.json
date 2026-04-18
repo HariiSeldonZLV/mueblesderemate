@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+     "build:vercel": "chmod +x vercel-build.sh && ./vercel-build.sh",
+    "watch": "ng build --watch",
     "test": "ng test"
   },
   "private": true,
