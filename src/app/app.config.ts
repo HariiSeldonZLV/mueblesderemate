@@ -1,21 +1,18 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { environment } from '../environments/environment';
-import { routes } from './app.routes';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 
-const app = initializeApp(environment.firebase);
-const db = getFirestore(app);
-const auth = getAuth(app);
+import { routes } from './app.routes';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
-    { provide: 'FIRESTORE', useValue: db },
-    { provide: 'AUTH', useValue: auth }
+    provideFirebaseApp(() => initializeApp(environment.firebase)), // ← firebase, no firebaseConfig
+    provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth())
   ]
 };

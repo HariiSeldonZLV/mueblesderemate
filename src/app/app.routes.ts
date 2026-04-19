@@ -6,6 +6,8 @@ import { ProductosComponent } from './components/productos/productos.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { authGuard } from './guards/auth.guard';
 
+console.log('🔧 Cargando rutas...', LandingComponent);
+
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },

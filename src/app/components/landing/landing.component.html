@@ -17,10 +17,12 @@
   </section>
 
   <!-- Barra de usuario -->
-  <div class="user-bar" *ngIf="authService.isAuthenticated()">
-    <span>👤 {{ authService.getCurrentUser()?.displayName || authService.getCurrentUser()?.email }}</span>
-    <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
-  </div>
+  @if (authService.isAuthenticated()) {
+    <div class="user-bar">
+      <span>👤 {{ authService.getCurrentUser()?.displayName || authService.getCurrentUser()?.email }}</span>
+      <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+    </div>
+  }
 
   <!-- Categorías Destacadas -->
   <section class="categorias">
@@ -59,14 +61,12 @@
           <div class="spinner"></div>
           <p>Cargando productos...</p>
         </div>
-      }
-
-      @if (!loading) {
+      } @else {
         <div class="productos-grid">
           @for (producto of productosRecientes; track producto.id) {
             <div class="producto-card">
               <div class="producto-imagen">
-                <img [src]="producto.images[0] || 'https://picsum.photos/id/122/300/220'" [alt]="producto.name">
+                <img [src]="producto.images?.[0] || 'https://picsum.photos/id/122/300/220'" [alt]="producto.name">
                 @if (producto.featured) {
                   <span class="producto-categoria">⭐ Destacado</span>
                 }
@@ -79,22 +79,13 @@
                   <span class="precio-oferta">Oferta mínima</span>
                 </div>
                 <button class="btn-ofertar" (click)="ofertar(producto)">
-                  📝 Hz tu oferta
+                  📝 Haz tu oferta
                 </button>
               </div>
             </div>
           }
         </div>
       }
-
-      @if (loading) {
-  <div class="loading-skeleton">
-    <div class="skeleton-card" *ngFor="let i of [1,2,3,4]">
-      <div class="skeleton-image"></div>
-      <div class="skeleton-text"></div>
-    </div>
-  </div>
-}
 
       <div class="ver-todos">
         <button class="btn-ver-todos" routerLink="/productos">Ver todos los productos →</button>
@@ -103,12 +94,11 @@
   </section>
 
   <!-- Modal de puja -->
-  <app-puja-modal
-    *ngIf="mostrarModal"
-    [producto]="productoSeleccionado"
-    (close)="cerrarModal()"
-    (bidSubmitted)="onBidSubmitted($event)">
-  </app-puja-modal>
+  @if (mostrarModal) {
+    <app-puja-modal
+      [producto]="productoSeleccionado"
+      (close)="cerrarModal()"
+      (bidSubmitted)="onBidSubmitted($event)">
+    </app-puja-modal>
+  }
 </div>
-
-

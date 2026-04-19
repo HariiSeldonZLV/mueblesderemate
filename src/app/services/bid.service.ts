@@ -1,6 +1,7 @@
-import { Injectable, Inject } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs, query, where, orderBy, doc, updateDoc, Timestamp } from 'firebase/firestore';
-import { Observable, from, map } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Firestore, collection, addDoc, query, where, getDocs, orderBy, doc, updateDoc, Timestamp } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
+import { Observable, from } from 'rxjs';
 
 export interface Bid {
   id?: string;
@@ -8,49 +9,52 @@ export interface Bid {
   productName: string;
   userId: string;
   userEmail: string;
-  userName: string;
+  userName?: string;
   amount: number;
   status: 'pending' | 'accepted' | 'rejected';
   createdAt: Date;
-  updatedAt: Date;
 }
 
 @Injectable({ providedIn: 'root' })
 export class BidService {
-  constructor(@Inject('FIRESTORE') private firestore: Firestore) {}
+  constructor(
+    private firestore: Firestore,
+    private auth: Auth
+  ) {}
 
-  createBid(bid: any): Promise<string> {
-    const ahora = Timestamp.now();
-    const bidsRef = collection(this.firestore, 'bids');
-    return addDoc(bidsRef, {
+  async createBid(bid: Omit<Bid, 'id' | 'createdAt' | 'status'>): Promise<string> {
+    const newBid = {
       ...bid,
-      status: 'pending',
-      createdAt: ahora,
-      updatedAt: ahora
-    }).then((docRef) => docRef.id);
+      status: 'pending' as const,
+      createdAt: new Date()
+    };
+
+    const docRef = await addDoc(collection(this.firestore, 'bids'), newBid);
+    return docRef.id;
   }
 
-  // ← AGREGAR ESTE MÉTODO
-  getBidsByUser(userId: string): Observable<any[]> {
-  const bidsRef = collection(this.firestore, 'bids');
-  const q = query(bidsRef, where('userId', '==', userId));
-  return from(getDocs(q)).pipe(
-    map((snapshot) => {
-      const bids = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      return bids.sort((a: any, b: any) => {
-        const dateA = a.createdAt?.toDate?.() || new Date(0);
-        const dateB = b.createdAt?.toDate?.() || new Date(0);
-        return dateB.getTime() - dateA.getTime();
-      });
-    })
-  );
-}
+  getBidsByUser(userId: string): Observable<Bid[]> {
+    return from(this.getUserBids(userId));
+  }
 
-  getBidsByProduct(productId: string): Observable<any[]> {
-    const bidsRef = collection(this.firestore, 'bids');
-    const q = query(bidsRef, where('productId', '==', productId), orderBy('amount', 'desc'));
-    return from(getDocs(q)).pipe(
-      map((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+  private async getUserBids(userId: string): Promise<Bid[]> {
+    const q = query(
+      collection(this.firestore, 'bids'),
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc')
     );
+
+    const snapshot = await getDocs(q);
+    const bids = snapshot.docs.map((doc: any) => ({
+      id: doc.id,
+      ...doc.data()
+    } as Bid));
+
+    return bids;
+  }
+
+  async updateBidStatus(bidId: string, status: 'accepted' | 'rejected'): Promise<void> {
+    const bidRef = doc(this.firestore, 'bids', bidId);
+    await updateDoc(bidRef, { status });
   }
 }

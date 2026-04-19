@@ -1,15 +1,14 @@
-import { Injectable, Inject } from '@angular/core';
-import { Firestore, collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { Injectable, inject } from '@angular/core';
+import { Firestore, collection, getDocs, query, orderBy, limit } from '@angular/fire/firestore';
 import { Observable, from, map, of } from 'rxjs';
 import { Product } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
+  private firestore = inject(Firestore); // ← Cambiar a inject()
   private productsCache: Product[] | null = null;
   private cacheTime: number | null = null;
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
-
-  constructor(@Inject('FIRESTORE') private firestore: Firestore) {}
 
   getProducts(limitCount: number = 10): Observable<Product[]> {
     // Verificar caché

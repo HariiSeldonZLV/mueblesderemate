@@ -1,81 +1,131 @@
-// src/app/services/auth.service.ts
-import { Injectable, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
 import {
   Auth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  User
-} from 'firebase/auth';
-import { Firestore, doc, setDoc, getDoc } from 'firebase/firestore';
-import { Observable, from } from 'rxjs';
+  sendPasswordResetEmail,
+  User,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
+} from '@angular/fire/auth';
+import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(
-    @Inject('AUTH') private auth: Auth,
-    @Inject('FIRESTORE') private firestore: Firestore,
-    private router: Router
-  ) {}
+  private auth = inject(Auth);
+  private firestore = inject(Firestore);
+  private router = inject(Router);
 
-  getCurrentUser(): User | null {
-    return this.auth.currentUser;
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$ = this.userSubject.asObservable();
+  private currentUser: User | null = null;
+
+  constructor() {
+    onAuthStateChanged(this.auth, (user) => {
+      this.currentUser = user;
+      this.userSubject.next(user);
+    });
   }
 
   isAuthenticated(): boolean {
-    return this.auth.currentUser !== null;
+    return this.currentUser !== null;
   }
 
-  registerWithEmail(email: string, password: string, displayName: string): Observable<User> {
-    return from(createUserWithEmailAndPassword(this.auth, email, password).then(async (userCredential) => {
-      await this.saveUserToFirestore(userCredential.user, displayName);
+  async loginWithEmail(email: string, password: string): Promise<User> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      this.currentUser = userCredential.user;
       return userCredential.user;
-    }));
-  }
-
-  loginWithEmail(email: string, password: string): Observable<User> {
-    return from(signInWithEmailAndPassword(this.auth, email, password).then((userCredential) => userCredential.user));
-  }
-
-  loginWithGoogle(): Observable<User> {
-    const provider = new GoogleAuthProvider();
-    return from(signInWithPopup(this.auth, provider).then(async (result) => {
-      await this.saveUserToFirestore(result.user, result.user.displayName || '');
-      return result.user;
-    }));
-  }
-
-  loginWithFacebook(): Observable<User> {
-    const provider = new FacebookAuthProvider();
-    return from(signInWithPopup(this.auth, provider).then(async (result) => {
-      await this.saveUserToFirestore(result.user, result.user.displayName || '');
-      return result.user;
-    }));
-  }
-
-  private async saveUserToFirestore(user: User, displayName: string) {
-    const userRef = doc(this.firestore, `users/${user.uid}`);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-      await setDoc(userRef, {
-        uid: user.uid,
-        email: user.email,
-        displayName: displayName,
-        photoURL: user.photoURL || '',
-        createdAt: new Date(),
-        rol: 'user'
-      });
+    } catch (error) {
+      throw error;
     }
   }
 
-  logout(): Observable<void> {
-    return from(signOut(this.auth).then(() => {
-      this.router.navigate(['/']);
-    }));
+  async registerWithEmail(email: string, password: string, displayName: string): Promise<User> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+      const user = userCredential.user;
+
+      await setDoc(doc(this.firestore, 'users', user.uid), {
+        email: user.email,
+        displayName: displayName,
+        createdAt: new Date(),
+        uid: user.uid
+      });
+
+      this.currentUser = user;
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async loginWithGoogle(): Promise<User> {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+
+      const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
+      if (!userDoc.exists()) {
+        await setDoc(doc(this.firestore, 'users', user.uid), {
+          email: user.email,
+          displayName: user.displayName,
+          createdAt: new Date(),
+          uid: user.uid
+        });
+      }
+
+      this.currentUser = user;
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async loginWithFacebook(): Promise<User> {
+    const provider = new FacebookAuthProvider();
+    try {
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+
+      const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
+      if (!userDoc.exists()) {
+        await setDoc(doc(this.firestore, 'users', user.uid), {
+          email: user.email,
+          displayName: user.displayName,
+          createdAt: new Date(),
+          uid: user.uid
+        });
+      }
+
+      this.currentUser = user;
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async logout(): Promise<void> {
+    await signOut(this.auth);
+    this.currentUser = null;
+    this.router.navigate(['/login']);
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUser;
   }
 }

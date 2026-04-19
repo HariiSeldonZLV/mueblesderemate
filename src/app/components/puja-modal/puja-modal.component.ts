@@ -55,15 +55,13 @@ export class PujaModalComponent {
     this.success = '';
 
     try {
+      // CORREGIDO: Solo enviar los campos que espera createBid
       await this.bidService.createBid({
         productId: this.producto.id,
         productName: this.producto.name,
         userId: user.uid,
         userEmail: user.email || '',
-        userName: user.displayName || user.email?.split('@')[0] || 'Usuario',
-        amount: this.montoOferta,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        amount: this.montoOferta
       });
 
       this.success = '¡Oferta enviada con éxito!';

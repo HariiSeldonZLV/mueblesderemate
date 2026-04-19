@@ -91,3 +91,22 @@ input, textarea, select {
     box-shadow: 2px 2px 0 rgba($mustard, 0.3);
   }
 }
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+router-outlet {
+  display: none;
+}
+
+// El contenido principal debe tener flex: 1
+main, .main-content {
+  flex: 1;
+}

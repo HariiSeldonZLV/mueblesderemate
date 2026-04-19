@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';  // ← Agregar Router
+import { RouterModule, Router } from '@angular/router';
 import { PujaModalComponent } from '../puja-modal/puja-modal.component';
 import { AuthService } from '../../services/auth.service';
 import { ProductService } from '../../services/product.service';
@@ -14,10 +14,11 @@ import { Product } from '../../models/product.model';
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent implements OnInit {
-  public authService = inject(AuthService);
+  authService = inject(AuthService);
   private productService = inject(ProductService);
-  private router = inject(Router);  // ← Agregar Router
+  private router = inject(Router);
 
+  // Propiedades que usa el HTML
   productosRecientes: Product[] = [];
   loading = true;
   mostrarModal = false;
@@ -41,12 +42,11 @@ export class LandingComponent implements OnInit {
     });
   }
 
-  irACategoria(categoria: string) {
-    // Redirigir a la página de productos con el filtro
+  irACategoria(categoria: string): void {
     this.router.navigate(['/productos'], { queryParams: { categoria: categoria } });
   }
 
-  ofertar(producto: Product) {
+  ofertar(producto: Product): void {
     if (!this.authService.isAuthenticated()) {
       alert('Debes iniciar sesión para hacer una oferta');
       return;
@@ -55,17 +55,18 @@ export class LandingComponent implements OnInit {
     this.mostrarModal = true;
   }
 
-  cerrarModal() {
+  cerrarModal(): void {
     this.mostrarModal = false;
     this.productoSeleccionado = null;
   }
 
-  onBidSubmitted(data: any) {
+  onBidSubmitted(data: any): void {
     console.log('Oferta enviada:', data);
     this.mostrarModal = false;
+    alert('¡Oferta enviada con éxito!');
   }
 
-  async logout() {
-    await this.authService.logout();
+  logout(): void {
+    this.authService.logout();
   }
 }
