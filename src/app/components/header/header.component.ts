@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-header',
@@ -11,11 +12,16 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  private authService = inject(AuthService);
-  isAuthenticated = () => this.authService.isAuthenticated();
-  currentUser = () => this.authService.getCurrentUser();
+  authService = inject(AuthService);
+  private carritoService = inject(CarritoService);
+  private router = inject(Router);
 
-  logout() {
+  getCantidadCarrito(): number {
+    return this.carritoService.getCantidadItems();
+  }
+
+  logout(): void {
     this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

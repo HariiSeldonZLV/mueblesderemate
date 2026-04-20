@@ -99,7 +99,6 @@ export class AuthService {
 
       this.currentUser = user;
 
-      // Forzar la carga del rol después del login
       const role = await this.getUserRole(user.uid);
       console.log('🎯 Rol después de login con Google:', role);
       this.userRoleSubject.next(role);

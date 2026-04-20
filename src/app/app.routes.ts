@@ -4,15 +4,15 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { CarritoComponent } from './components/carrito/carrito.component';
 import { authGuard } from './guards/auth.guard';
-
-console.log('🔧 Cargando rutas...', LandingComponent);
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
   { path: 'productos', component: ProductosComponent },
+  { path: 'carrito', component: CarritoComponent },
   { path: 'admin', component: AdminComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' }
 ];

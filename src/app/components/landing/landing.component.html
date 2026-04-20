@@ -79,9 +79,14 @@
                   <span class="precio-fijo">${{ producto.price | number }}</span>
                   <span class="precio-oferta">Oferta mínima</span>
                 </div>
-                <button class="btn-ofertar" (click)="ofertar(producto)">
-                  📝 Haz tu oferta
-                </button>
+                <div class="botones-accion">
+  <button class="btn-comprar" (click)="comprarAhora(producto)">
+    🛒 Comprar Ahora
+  </button>
+  <button class="btn-ofertar" (click)="ofertar(producto)">
+    📝 Haz tu oferta
+  </button>
+</div>
               </div>
             </div>
           }
@@ -123,10 +128,11 @@
 
   <!-- Modal de puja -->
   @if (mostrarModal) {
-    <app-puja-modal
-      [producto]="productoSeleccionado"
-      (close)="cerrarModal()"
-      (bidSubmitted)="onBidSubmitted($event)">
-    </app-puja-modal>
-  }
+  <app-puja-modal
+    [producto]="productoSeleccionado"
+    (close)="cerrarModal()"
+    (bidSubmitted)="onBidSubmitted($event)"
+    (buyNow)="onBuyNow($event)">
+  </app-puja-modal>
+}
 </div>

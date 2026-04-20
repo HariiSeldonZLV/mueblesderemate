@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';  // ← Agregar Router
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../services/auth.service';
 import { Product } from '../../models/product.model';
 import { PujaModalComponent } from '../puja-modal/puja-modal.component';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-productos',
@@ -18,7 +19,8 @@ export class ProductosComponent implements OnInit {
   private productService = inject(ProductService);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
-  private router = inject(Router);  // ← Agregar Router
+  private router = inject(Router);
+  private carritoService = inject(CarritoService);
 
   products: Product[] = [];
   filteredProducts: Product[] = [];
@@ -69,10 +71,9 @@ export class ProductosComponent implements OnInit {
         (p: Product) => p.category === this.selectedCategory
       );
     }
-    console.log('Filtro aplicado:', this.selectedCategory, 'Productos:', this.filteredProducts.length);
   }
 
-  irACategoria(categoria: string) {
+  irACategoria(categoria: string): void {
     let filtro = categoria;
     if (categoria === 'destacados') {
       filtro = 'featured';
@@ -80,7 +81,26 @@ export class ProductosComponent implements OnInit {
     this.router.navigate(['/productos'], { queryParams: { categoria: filtro } });
   }
 
-  ofertar(producto: Product) {
+  comprarAhora(producto: any): void {
+    if (!this.authService.isAuthenticated()) {
+      alert('Debes iniciar sesión para comprar');
+      return;
+    }
+
+    this.carritoService.agregarProducto({
+      id: producto.id,
+      name: producto.name,
+      price: producto.price,
+      category: producto.category,
+      image: producto.images?.[0] || '',
+      quantity: 1
+    });
+
+    alert('✅ Producto agregado al carrito');
+    this.router.navigate(['/carrito']);
+  }
+
+  ofertar(producto: any): void {
     if (!this.authService.isAuthenticated()) {
       alert('Debes iniciar sesión para hacer una oferta');
       return;
@@ -89,14 +109,20 @@ export class ProductosComponent implements OnInit {
     this.mostrarModal = true;
   }
 
-  cerrarModal() {
+  cerrarModal(): void {
     this.mostrarModal = false;
     this.productoSeleccionado = null;
   }
 
-  onBidSubmitted(data: any) {
+  onBidSubmitted(data: any): void {
     console.log('Oferta enviada:', data);
     this.mostrarModal = false;
     alert('¡Oferta enviada con éxito!');
+  }
+
+  onBuyNow(data: any): void {
+    console.log('Compra ahora desde modal:', data);
+    this.mostrarModal = false;
+    this.router.navigate(['/carrito']);
   }
 }

@@ -663,3 +663,57 @@ $bone: #FFF8F0;
     }
   }
 }
+
+// Estilos para los botones de acción en productos
+.botones-accion {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+
+  button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .btn-comprar {
+    background: #10b981;
+    color: white;
+
+    &:hover {
+      background: #059669;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+  }
+
+  .btn-ofertar {
+    background: #f59e0b;
+    color: white;
+
+    &:hover {
+      background: #d97706;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+  }
+}
+
+// Responsive para móviles
+@media (max-width: 768px) {
+  .botones-accion {
+    flex-direction: column;
+    gap: 8px;
+
+    button {
+      padding: 12px;
+    }
+  }
+}

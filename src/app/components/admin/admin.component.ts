@@ -35,6 +35,23 @@ export class AdminComponent implements OnInit {
 
   bids: any[] = [];
 
+  // Getters para filtrar ofertas (necesarios para la vista)
+  get pendingBids() {
+    return this.bids.filter(bid => bid.status === 'pending');
+  }
+
+  get acceptedBids() {
+    return this.bids.filter(bid => bid.status === 'accepted');
+  }
+
+  get rejectedBids() {
+    return this.bids.filter(bid => bid.status === 'rejected');
+  }
+
+  get pendingBidsCount() {
+    return this.pendingBids.length;
+  }
+
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
     if (user?.email !== 'admin@rematezone.cl') {

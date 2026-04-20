@@ -132,20 +132,44 @@
         }
       }
 
-      .btn-ofertar {
-        width: 100%;
-        padding: 10px;
-        background: #f59e0b;
-        color: white;
-        border: none;
-        border-radius: 30px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s;
+      // Botones de acción dentro de producto-info
+      .botones-accion {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
 
-        &:hover {
-          background: #e67e22;
-          transform: translateY(-2px);
+        button {
+          flex: 1;
+          padding: 10px;
+          border: none;
+          border-radius: 8px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+        }
+
+        .btn-comprar {
+          background: #10b981;
+          color: white;
+
+          &:hover {
+            background: #059669;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+          }
+        }
+
+        .btn-ofertar {
+          background: #f59e0b;
+          color: white;
+
+          &:hover {
+            background: #d97706;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+          }
         }
       }
     }
@@ -175,4 +199,262 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+// Estilos del modal (mantenerlos separados, no anidados)
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+
+  h2 {
+    margin: 0;
+    color: #f59e0b;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #666;
+    }
+  }
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-body .producto-info {
+  background: #f8f8f5;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: #333;
+  }
+
+  .precio-base {
+    margin: 5px 0;
+    color: #666;
+  }
+
+  .oferta-minima {
+    margin: 5px 0;
+    color: #f59e0b;
+    font-size: 1.1em;
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #f59e0b;
+    }
+
+    &:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+
+  .btn-cancelar {
+    flex: 1;
+    padding: 12px;
+    background: #f5f5f0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #e5e5e0;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .acciones-principales {
+    flex: 2;
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-comprar-ahora {
+    flex: 1;
+    padding: 12px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+
+  .btn-enviar {
+    flex: 1;
+    padding: 12px;
+    background: #f59e0b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:hover:not(:disabled) {
+      background: #d97706;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+}
+
+.error-message {
+  background: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c33;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #2e7d32;
+  font-size: 0.9rem;
+}
+
+.nota {
+  font-size: 0.7rem;
+  color: #999;
+  text-align: center;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-actions {
+    flex-direction: column;
+
+    .acciones-principales {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-cancelar {
+      order: 3;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 <div class="modal-overlay" (click)="cerrar()">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>📝 Hz tu oferta</h2>
+      <h2>📝 Haz tu oferta</h2>
       <button class="btn-close" (click)="cerrar()">✖</button>
     </div>
 
@@ -22,8 +22,8 @@
 
       <div class="form-group">
         <label for="monto">Tu oferta ($)</label>
-        <input 
-          type="number" 
+        <input
+          type="number"
           id="monto"
           [(ngModel)]="montoOferta"
           [min]="montoMinimo"

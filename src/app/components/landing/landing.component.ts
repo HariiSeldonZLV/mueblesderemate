@@ -1,12 +1,11 @@
-import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { PujaModalComponent } from '../puja-modal/puja-modal.component';
-import { AuthService } from '../../services/auth.service';
 import { ProductService } from '../../services/product.service';
+import { AuthService } from '../../services/auth.service';
+import { CarritoService } from '../../services/carrito.service';
+import { PujaModalComponent } from '../puja-modal/puja-modal.component';
 import { Product } from '../../models/product.model';
-
-declare var FB: any;
 
 @Component({
   selector: 'app-landing',
@@ -15,9 +14,10 @@ declare var FB: any;
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
-export class LandingComponent implements OnInit, AfterViewInit {
-  authService = inject(AuthService);
+export class LandingComponent implements OnInit {
   private productService = inject(ProductService);
+  public authService = inject(AuthService);
+  private carritoService = inject(CarritoService);
   private router = inject(Router);
 
   productosRecientes: Product[] = [];
@@ -25,64 +25,17 @@ export class LandingComponent implements OnInit, AfterViewInit {
   mostrarModal = false;
   productoSeleccionado: any = null;
 
-  facebookPageUrl = 'https://facebook.com/profile.php?id=61572127465917'; // Cambia por tu URL
-
   ngOnInit(): void {
     this.cargarProductosRecientes();
-    this.cargarFacebookSDK();
-  }
-
-  ngAfterViewInit(): void {
-    // Esperar a que el DOM esté completamente renderizado
-    setTimeout(() => {
-      this.inicializarFacebookPlugin();
-    }, 1500);
-  }
-
-  cargarFacebookSDK(): void {
-    // Verificar si ya existe el SDK
-    if (document.getElementById('facebook-jssdk')) {
-      return;
-    }
-
-    // Cargar el SDK de Facebook
-    (function(d, s, id) {
-      const element = d.getElementsByTagName(s)[0];
-      const js = d.createElement(s) as any;
-      js.id = id;
-      js.src = "https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v18.0&appId=YOUR_APP_ID";
-
-      if (element && element.parentNode) {
-        element.parentNode.insertBefore(js, element);
-      } else {
-        d.head.appendChild(js);
-      }
-    }(document, 'script', 'facebook-jssdk'));
-  }
-
-  inicializarFacebookPlugin(): void {
-    try {
-      if (typeof FB !== 'undefined') {
-        // Parsear solo si existe el elemento
-        const fbPageElement = document.querySelector('.fb-page');
-        if (fbPageElement) {
-          FB.XFBML.parse();
-          console.log('Plugin de Facebook inicializado');
-        }
-      }
-    } catch (error) {
-      console.warn('Error al inicializar Facebook plugin:', error);
-    }
   }
 
   cargarProductosRecientes(): void {
-    this.loading = true;
-    this.productService.getProducts(4).subscribe({
-      next: (products) => {
-        this.productosRecientes = products;
+    this.productService.getProducts().subscribe({
+      next: (products: Product[]) => {
+        this.productosRecientes = products.slice(0, 6);
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error cargando productos:', err);
         this.loading = false;
       }
@@ -93,7 +46,27 @@ export class LandingComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/productos'], { queryParams: { categoria: categoria } });
   }
 
-  ofertar(producto: Product): void {
+  // Método para comprar ahora
+  comprarAhora(producto: any): void {
+    if (!this.authService.isAuthenticated()) {
+      alert('Debes iniciar sesión para comprar');
+      return;
+    }
+
+    this.carritoService.agregarProducto({
+      id: producto.id,
+      name: producto.name,
+      price: producto.price,
+      category: producto.category,
+      image: producto.images?.[0] || '',
+      quantity: 1
+    });
+
+    alert('✅ Producto agregado al carrito');
+    this.router.navigate(['/carrito']);
+  }
+
+  ofertar(producto: any): void {
     if (!this.authService.isAuthenticated()) {
       alert('Debes iniciar sesión para hacer una oferta');
       return;
@@ -113,7 +86,14 @@ export class LandingComponent implements OnInit, AfterViewInit {
     alert('¡Oferta enviada con éxito!');
   }
 
+  onBuyNow(data: any): void {
+    console.log('Compra ahora desde modal:', data);
+    this.mostrarModal = false;
+    this.router.navigate(['/carrito']);
+  }
+
   logout(): void {
     this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

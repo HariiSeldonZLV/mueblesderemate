@@ -6,10 +6,12 @@
   <nav class="nav">
     <a routerLink="/" routerLinkActive="active">Inicio</a>
     <a routerLink="/productos" routerLinkActive="active">Productos</a>
+    <a routerLink="/carrito" routerLinkActive="active" class="carrito-link">
+      🛒 Carrito ({{ getCantidadCarrito() }})
+    </a>
 
-    @if (isAuthenticated()) {
-      <!-- Mostrar admin si el email es el correcto -->
-      @if (currentUser()?.email === 'admin@rematezone.cl') {
+    @if (authService.isAuthenticated()) {
+      @if (authService.getCurrentUser()?.email === 'admin@rematezone.cl') {
         <a routerLink="/admin" routerLinkActive="active">🛠️ Admin</a>
       }
       <a routerLink="/perfil" routerLinkActive="active">📋 Mis Subastas</a>

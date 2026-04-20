@@ -42,9 +42,14 @@
             <div class="stock" [class.bajo]="product.stock < 10">
               📦 {{ product.stock }} disponibles
             </div>
-            <button class="btn-ofertar" (click)="ofertar(product)">
-              📝 Hz tu oferta
-            </button>
+            <div class="botones-accion">
+  <button class="btn-comprar" (click)="comprarAhora(product)">
+    🛒 Comprar Ahora
+  </button>
+  <button class="btn-ofertar" (click)="ofertar(product)">
+    📝 Haz tu oferta
+  </button>
+</div>
           </div>
         </div>
       }
@@ -62,5 +67,6 @@
   *ngIf="mostrarModal"
   [producto]="productoSeleccionado"
   (close)="cerrarModal()"
-  (bidSubmitted)="onBidSubmitted($event)">
+  (bidSubmitted)="onBidSubmitted($event)"
+  (buyNow)="onBuyNow($event)">
 </app-puja-modal>
