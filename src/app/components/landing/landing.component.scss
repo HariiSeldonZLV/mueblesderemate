@@ -490,3 +490,176 @@ $bone: #FFF8F0;
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+// Estilos para el feed de Facebook
+.facebook-feed {
+  padding: 60px 0;
+  background-color: #f8f9fa;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .facebook-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+
+  .facebook-widget {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 600px;
+
+    .fb-page {
+      margin: 0 auto;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .facebook-feed {
+    padding: 40px 0;
+
+    .section-title {
+      font-size: 1.8rem;
+    }
+
+    .facebook-widget {
+      .fb-page {
+        width: 100% !important;
+      }
+    }
+  }
+}
+// Redes Sociales - Estilo Vintage
+// Redes Sociales - Estilo Vintage
+.social-section {
+  padding: 60px 20px;
+  background: $cream;
+  border-top: 1px solid $chocolate-light;
+  border-bottom: 1px solid $chocolate-light;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    text-align: center;
+    font-family: 'Righteous', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: $chocolate-dark;
+    position: relative;
+
+    &::after {
+      content: '✦';
+      display: block;
+      font-size: 1.5rem;
+      color: $gold;
+      background: none;
+      width: auto;
+      height: auto;
+      margin: 10px auto 0;
+    }
+  }
+
+  .social-description {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    color: rgba($chocolate-dark, 0.7);
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+
+  .social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 28px;
+      background: $bone;
+      border: 1px solid $chocolate-light;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+      box-shadow: 4px 4px 0 rgba($chocolate-dark, 0.1);
+      cursor: pointer;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 6px 6px 0 rgba($chocolate-dark, 0.15);
+      }
+
+      .social-icon {
+        font-size: 1.2rem;
+      }
+
+      .social-text {
+        color: $chocolate-dark;
+        transition: color 0.3s;
+      }
+
+      // Facebook
+      &.facebook:hover {
+        background: #1877f2;
+        border-color: #1877f2;
+        .social-text, .social-icon {
+          color: white;
+        }
+      }
+
+      // Instagram
+      &.instagram:hover {
+        background: linear-gradient(45deg, #f09433, #d62976);
+        border-color: #d62976;
+        .social-text, .social-icon {
+          color: white;
+        }
+      }
+
+      // WhatsApp
+      &.whatsapp:hover {
+        background: #25D366;
+        border-color: #25D366;
+        .social-text, .social-icon {
+          color: white;
+        }
+      }
+
+      // TikTok
+      &.tiktok:hover {
+        background: #000000;
+        border-color: #000000;
+        .social-text, .social-icon {
+          color: white;
+        }
+      }
+    }
+  }
+}

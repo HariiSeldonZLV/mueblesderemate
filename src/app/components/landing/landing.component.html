@@ -66,7 +66,8 @@
           @for (producto of productosRecientes; track producto.id) {
             <div class="producto-card">
               <div class="producto-imagen">
-                <img [src]="producto.images?.[0] || 'https://picsum.photos/id/122/300/220'" [alt]="producto.name">
+                <!-- CORREGIDO: Eliminado el optional chaining que causaba la advertencia -->
+                <img [src]="(producto.images && producto.images[0]) || 'https://picsum.photos/id/122/300/220'" [alt]="producto.name">
                 @if (producto.featured) {
                   <span class="producto-categoria">⭐ Destacado</span>
                 }
@@ -92,6 +93,33 @@
       </div>
     </div>
   </section>
+
+<!-- Redes Sociales - Estilo Vintage -->
+<section class="social-section">
+  <div class="container">
+    <h2 class="section-title">Síguenos</h2>
+    <p class="social-description">Conecta con nosotros en redes sociales</p>
+
+    <div class="social-buttons">
+      <a href="https://www.facebook.com/profile.php?id=61572127465917" target="_blank" rel="noopener noreferrer" class="social-btn facebook">
+        <i class="fab fa-facebook-f social-icon"></i>
+        <span class="social-text">Facebook</span>
+      </a>
+      <a href="https://www.instagram.com/muebles.oca.molina" target="_blank" rel="noopener noreferrer" class="social-btn instagram">
+        <i class="fab fa-instagram social-icon"></i>
+        <span class="social-text">Instagram</span>
+      </a>
+      <a href="https://wa.me/56982627475" target="_blank" rel="noopener noreferrer" class="social-btn whatsapp">
+        <i class="fab fa-whatsapp social-icon"></i>
+        <span class="social-text">WhatsApp</span>
+      </a>
+      <a href="https://www.tiktok.com/@tupagina" target="_blank" rel="noopener noreferrer" class="social-btn tiktok">
+        <i class="fab fa-tiktok social-icon"></i>
+        <span class="social-text">TikTok</span>
+      </a>
+    </div>
+  </div>
+</section>
 
   <!-- Modal de puja -->
   @if (mostrarModal) {

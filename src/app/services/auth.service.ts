@@ -13,7 +13,7 @@ import {
 } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -24,11 +24,22 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
   private currentUser: User | null = null;
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
+  userRole$ = this.userRoleSubject.asObservable();
 
   constructor() {
-    onAuthStateChanged(this.auth, (user) => {
+    onAuthStateChanged(this.auth, async (user) => {
+      console.log('🔄 onAuthStateChanged - Usuario:', user?.email);
       this.currentUser = user;
       this.userSubject.next(user);
+
+      if (user) {
+        const role = await this.getUserRole(user.uid);
+        console.log('📌 Rol obtenido para', user.email, ':', role);
+        this.userRoleSubject.next(role);
+      } else {
+        this.userRoleSubject.next(null);
+      }
     });
   }
 
@@ -40,6 +51,7 @@ export class AuthService {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       this.currentUser = userCredential.user;
+      console.log('✅ Login exitoso:', email);
       return userCredential.user;
     } catch (error) {
       throw error;
@@ -55,7 +67,8 @@ export class AuthService {
         email: user.email,
         displayName: displayName,
         createdAt: new Date(),
-        uid: user.uid
+        uid: user.uid,
+        rol: 'user'
       });
 
       this.currentUser = user;
@@ -77,11 +90,20 @@ export class AuthService {
           email: user.email,
           displayName: user.displayName,
           createdAt: new Date(),
-          uid: user.uid
+          uid: user.uid,
+          rol: 'user'
         });
+      } else {
+        console.log('📄 Documento encontrado en Firestore:', userDoc.data());
       }
 
       this.currentUser = user;
+
+      // Forzar la carga del rol después del login
+      const role = await this.getUserRole(user.uid);
+      console.log('🎯 Rol después de login con Google:', role);
+      this.userRoleSubject.next(role);
+
       return user;
     } catch (error) {
       throw error;
@@ -100,7 +122,8 @@ export class AuthService {
           email: user.email,
           displayName: user.displayName,
           createdAt: new Date(),
-          uid: user.uid
+          uid: user.uid,
+          rol: 'user'
         });
       }
 
@@ -114,6 +137,7 @@ export class AuthService {
   async logout(): Promise<void> {
     await signOut(this.auth);
     this.currentUser = null;
+    this.userRoleSubject.next(null);
     this.router.navigate(['/login']);
   }
 
@@ -127,5 +151,45 @@ export class AuthService {
 
   getCurrentUser(): User | null {
     return this.currentUser;
+  }
+
+  async getUserRole(uid: string): Promise<string> {
+    try {
+      console.log('🔍 Buscando rol para UID:', uid);
+      const userDoc = await getDoc(doc(this.firestore, 'users', uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        console.log('📋 Datos del documento:', data);
+        const role = data['rol'] || data['role'] || 'user';
+        console.log('👑 Rol encontrado:', role);
+        return role;
+      } else {
+        console.warn('⚠️ No existe documento para UID:', uid);
+        return 'user';
+      }
+    } catch (error) {
+      console.error('Error obteniendo rol:', error);
+      return 'user';
+    }
+  }
+
+  async isAdmin(): Promise<boolean> {
+    if (!this.currentUser) return false;
+    const role = await this.getUserRole(this.currentUser.uid);
+    console.log('🔐 Verificando isAdmin:', role === 'admin');
+    return role === 'admin';
+  }
+
+  isAdmin$(): Observable<boolean> {
+    return this.userRole$.pipe(
+      switchMap(role => {
+        console.log('📡 isAdmin$ - rol actual:', role);
+        return of(role === 'admin');
+      })
+    );
+  }
+
+  getCurrentRole(): string | null {
+    return this.userRoleSubject.value;
   }
 }

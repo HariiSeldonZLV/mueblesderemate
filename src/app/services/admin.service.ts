@@ -1,5 +1,5 @@
-import { Injectable, Inject } from '@angular/core';
-import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy } from 'firebase/firestore';
+import { Injectable, inject } from '@angular/core';
+import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy } from '@angular/fire/firestore'; // ← Cambia 'firebase/firestore' por '@angular/fire/firestore'
 import { Observable, from, map } from 'rxjs';
 
 export interface Product {
@@ -18,7 +18,11 @@ export interface Product {
   providedIn: 'root'
 })
 export class AdminService {
-  constructor(@Inject('FIRESTORE') private firestore: Firestore) {}
+  // 🔥 Cambia esta línea:
+  private firestore = inject(Firestore); // ← Usa inject() en lugar de @Inject
+
+  // Elimina el constructor o déjalo vacío
+  constructor() {}
 
   getProducts(): Observable<Product[]> {
     const productsRef = collection(this.firestore, 'products');
