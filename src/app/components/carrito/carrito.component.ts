@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { CarritoService, CarritoItem } from '../../services/carrito.service';
 import { AuthService } from '../../services/auth.service';
-import { Subscription } from 'rxjs'; // <-- Importa Subscription
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-carrito',
@@ -13,26 +13,32 @@ import { Subscription } from 'rxjs'; // <-- Importa Subscription
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.scss'
 })
-export class CarritoComponent implements OnInit, OnDestroy { // <-- Implementa OnDestroy
+export class CarritoComponent implements OnInit, OnDestroy {
   private carritoService = inject(CarritoService);
   private authService = inject(AuthService);
   private router = inject(Router);
 
   carritoItems: CarritoItem[] = [];
   total: number = 0;
-  private subscription: Subscription = new Subscription(); // <-- Para la suscripción
+  private subscription: Subscription = new Subscription();
+
+  // DATOS BANCARIOS - ESTO DEBE ESTAR AQUI
+  datosBanco = {
+    nombre: 'Banco Estado',
+    cuenta: '43100076889',
+    titular: 'Denis Salinas Morales',
+    rut: '13.855.826-6',
+    tipo: 'Cuenta Corriente'
+  };
 
   ngOnInit(): void {
-    // Suscribirse a los cambios del carrito en tiempo real
     this.subscription = this.carritoService.getCarrito().subscribe(items => {
       this.carritoItems = items;
       this.calcularTotal();
-      console.log('Carrito actualizado:', this.carritoItems); // <-- Para depurar
     });
   }
 
   ngOnDestroy(): void {
-    // Limpiar la suscripción al destruir el componente
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -66,6 +72,58 @@ export class CarritoComponent implements OnInit, OnDestroy { // <-- Implementa O
     this.router.navigate(['/productos']);
   }
 
+  generarMensajeWhatsApp(): string {
+    const user = this.authService.getCurrentUser();
+    const nombre = user?.displayName || user?.email?.split('@')[0] || 'Cliente';
+    const email = user?.email || 'No especificado';
+
+    let detalleProductos = '';
+    this.carritoItems.forEach(item => {
+      detalleProductos += `• ${item.name}\n   Precio: $${item.price.toLocaleString('es-CL')} x ${item.quantity} = $${(item.price * item.quantity).toLocaleString('es-CL')}\n`;
+    });
+
+    const fecha = new Date();
+    const fechaStr = fecha.toLocaleDateString('es-CL');
+    const horaStr = fecha.toLocaleTimeString('es-CL');
+    const nroPedido = fecha.getTime();
+
+    return `🛒 *NUEVO PEDIDO - REMATEZONE* 🛒
+
+👤 *Datos del Cliente:*
+Nombre: ${nombre}
+Email: ${email}
+
+📦 *Productos:*
+${detalleProductos}
+
+💰 *Total a Pagar:* $${this.total.toLocaleString('es-CL')}
+
+📅 Fecha: ${fechaStr} - ${horaStr}
+🆔 N° Pedido: ${nroPedido}
+
+---
+*DATOS PARA DEPÓSITO:*
+
+Banco: ${this.datosBanco.nombre}
+Cuenta: ${this.datosBanco.cuenta}
+Titular: ${this.datosBanco.titular}
+RUT: ${this.datosBanco.rut}
+Tipo: ${this.datosBanco.tipo}
+
+*Monto a depositar:* $${this.total.toLocaleString('es-CL')}
+*Referencia:* Pedido ${nroPedido}
+
+---
+✅ *Instrucciones:*
+1. Realiza el depósito por el monto exacto
+2. Envía el comprobante a este mismo chat
+3. Confirma tu pago con tu nombre y número de pedido
+
+📌 *Importante:* El pedido se procesará al recibir la confirmación del depósito.
+
+¡Gracias por comprar en RemateZone! 🏠`;
+  }
+
   procederAlPago(): void {
     if (!this.authService.isAuthenticated()) {
       alert('Debes iniciar sesión para proceder al pago');
@@ -78,7 +136,27 @@ export class CarritoComponent implements OnInit, OnDestroy { // <-- Implementa O
       return;
     }
 
-    alert('🛒 Funcionalidad de pago en desarrollo. Total a pagar: $' + this.total.toLocaleString('es-CL'));
+    const mensaje = this.generarMensajeWhatsApp();
+    const telefono = '56982627475';
+    const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+
+    window.open(urlWhatsApp, '_blank');
+  }
+
+  // METODO COPIAR DATOS - ESTO DEBE ESTAR AQUI
+  copiarDatosBancarios(): void {
+    const datos = `🏦 DATOS PARA DEPOSITO
+
+Banco: ${this.datosBanco.nombre}
+Cuenta: ${this.datosBanco.cuenta}
+Titular: ${this.datosBanco.titular}
+RUT: ${this.datosBanco.rut}
+Tipo: ${this.datosBanco.tipo}
+Monto: $${this.total.toLocaleString('es-CL')}`;
+
+    navigator.clipboard.writeText(datos)
+      .then(() => alert('✅ Datos bancarios copiados'))
+      .catch(() => alert('❌ Error al copiar'));
   }
 
   getCantidadTotal(): number {

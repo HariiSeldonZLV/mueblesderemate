@@ -1,53 +1,68 @@
 <div class="carrito-container">
   <h1>🛒 Mi Carrito</h1>
 
-  <!-- Depuración: Muestra cuántos items hay -->
-  <p class="debug-info">Items en carrito: {{ carritoItems.length }}</p>
-
   @if (carritoItems.length === 0) {
     <div class="carrito-vacio">
       <p>El carrito está vacío</p>
       <button (click)="continuarComprando()">Ver Productos</button>
     </div>
   } @else {
-    <div class="carrito-items">
-      <!-- Cabecera para escritorio -->
-      <div class="item header">
-        <div>Producto</div>
-        <div>Precio</div>
-        <div>Cantidad</div>
-        <div>Subtotal</div>
-        <div></div>
-      </div>
-
-      @for (item of carritoItems; track item.id) {
-        <div class="item">
-          <div class="producto-info">
-            <img [src]="item.image" [alt]="item.name" class="producto-imagen">
-            <div class="producto-nombre">{{ item.name }}</div>
-          </div>
-          <div class="producto-precio">${{ item.price | number }}</div>
-          <div class="producto-cantidad">
-            <button (click)="actualizarCantidad(item, item.quantity - 1)">-</button>
-            <span>{{ item.quantity }}</span>
-            <button (click)="actualizarCantidad(item, item.quantity + 1)">+</button>
-          </div>
-          <div class="producto-subtotal">${{ item.price * item.quantity | number }}</div>
-          <div class="producto-accion">
-            <button (click)="eliminarProducto(item)" class="btn-eliminar">🗑️</button>
-          </div>
+    <div class="carrito-content">
+      <div class="carrito-items">
+        <div class="item header">
+          <div>Producto</div>
+          <div>Precio</div>
+          <div>Cantidad</div>
+          <div>Subtotal</div>
+          <div></div>
         </div>
-      }
-    </div>
 
-    <div class="carrito-resumen">
-      <div class="total">
-        <h3>Total: ${{ total | number }}</h3>
+        @for (item of carritoItems; track item.id) {
+          <div class="item">
+            <div class="producto-info">
+              <img [src]="item.image" [alt]="item.name" class="producto-imagen">
+              <div class="producto-nombre">{{ item.name }}</div>
+            </div>
+            <div class="producto-precio">${{ item.price | number }}</div>
+            <div class="producto-cantidad">
+              <button (click)="actualizarCantidad(item, item.quantity - 1)">-</button>
+              <span>{{ item.quantity }}</span>
+              <button (click)="actualizarCantidad(item, item.quantity + 1)">+</button>
+            </div>
+            <div class="producto-subtotal">${{ item.price * item.quantity | number }}</div>
+            <div class="producto-accion">
+              <button (click)="eliminarProducto(item)" class="btn-eliminar">🗑️</button>
+            </div>
+          </div>
+        }
       </div>
-      <div class="acciones">
-        <button (click)="continuarComprando()" class="btn-seguir">Seguir Comprando</button>
-        <button (click)="procederAlPago()" class="btn-pagar">Proceder al Pago</button>
-        <button (click)="vaciarCarrito()" class="btn-vaciar">Vaciar Carrito</button>
+
+      <div class="carrito-resumen">
+        <div class="total">
+          <h3>Total: ${{ total | number }}</h3>
+        </div>
+
+        <div class="datos-bancarios">
+          <h4>🏦 Datos para depósito:</h4>
+          <div class="banco-info">
+            <p><strong>Banco:</strong> {{ datosBanco.nombre }}</p>
+            <p><strong>Cuenta:</strong> {{ datosBanco.cuenta }}</p>
+            <p><strong>Titular:</strong> {{ datosBanco.titular }}</p>
+            <p><strong>RUT:</strong> {{ datosBanco.rut }}</p>
+            <p><strong>Tipo:</strong> {{ datosBanco.tipo }}</p>
+          </div>
+          <button class="btn-copiar" (click)="copiarDatosBancarios()">
+            📋 Copiar datos bancarios
+          </button>
+        </div>
+
+        <div class="acciones">
+          <button (click)="continuarComprando()" class="btn-seguir">Seguir Comprando</button>
+          <button (click)="procederAlPago()" class="btn-pagar">
+            💬 Proceder al Pago (WhatsApp)
+          </button>
+          <button (click)="vaciarCarrito()" class="btn-vaciar">Vaciar Carrito</button>
+        </div>
       </div>
     </div>
   }

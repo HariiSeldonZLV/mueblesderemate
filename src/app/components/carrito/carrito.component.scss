@@ -170,3 +170,46 @@
     }
   }
 }
+
+.datos-bancarios {
+  background: #f8f5f0;
+  border: 1px solid #e0d5c0;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+
+  h4 {
+    color: #5C4033;
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+  }
+
+  .banco-info {
+    font-size: 0.85rem;
+
+    p {
+      margin: 5px 0;
+      color: #666;
+
+      strong {
+        color: #5C4033;
+      }
+    }
+  }
+
+  .btn-copiar {
+    background: #e0d5c0;
+    color: #5C4033;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    width: 100%;
+
+    &:hover {
+      background: #d0c5b0;
+    }
+  }
+}
